@@ -22,7 +22,7 @@ def send_simple_message(to, subject, body):
     return requests.post(
         f"https://api.mailgun.net/v3/{domain}/messages",
         auth=("api", api_key),
-        data={"from": "Newton Neto User <mailgun@{domain}>",
+        data={"from": f"Newton Neto User <mailgun@{domain}>",
               "to": [to],
               "subject": subject,
               "text": body})
