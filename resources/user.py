@@ -7,6 +7,7 @@ from passlib.hash import pbkdf2_sha256
 from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, jwt_required, get_jwt
 from sqlalchemy import or_
 
+from flask import current_app
 from db import db
 from blocklist import BLOCKLIST
 from models import UserModel
@@ -22,7 +23,7 @@ def send_simple_message(to, subject, body):
     return requests.post(
         f"https://api.mailgun.net/v3/{domain}/messages",
         auth=("api", api_key),
-        data={"from": f"Newton Neto User <mailgun@{domain}>",
+        data={"from": f"newton@{domain}",
               "to": [to],
               "subject": subject,
               "text": body})
@@ -33,8 +34,8 @@ class UserRegister(MethodView):
     @blp.arguments(UserRegisterSchema)
     def post(self, user_data):
         if UserModel.query.filter(or_(
-            UserModel.username == user_data["username"],
-            UserModel.email == user_data["email"]
+                UserModel.username == user_data["username"],
+                UserModel.email == user_data["email"]
         )).first():
             abort(409, message=f"A user with that username or email already exists.")
 
